@@ -1,0 +1,16 @@
+.Backgroud {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgb(101,95,213);
+    background: linear-gradient(135deg, rgba(101,95,213,1) 0%, rgba(165,56,189,1) 100%);
+}
+
+.Login {
+    display: flex;
+    flex-direction: column;
+    background-color: azure;
+}
