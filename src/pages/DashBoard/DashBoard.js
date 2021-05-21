@@ -140,7 +140,7 @@ export default function Dashboard() {
     const dateObj = new Date(date);
     let formatted = "";
 
-    formatted = `${("0"+ dateObj.getDate()).slice(-2)}/${("0" + 
+    formatted = `${("0" + dateObj.getDate()).slice(-2)}/${("0" +
       (dateObj.getMonth() + 1)).slice(-2)}/${dateObj.getFullYear()}`
 
     return formatted;
@@ -194,17 +194,15 @@ export default function Dashboard() {
       <div className={classes.appBarSpacer} />
       <main className={classes.content}>
         <Container>
-          <Table>
-            {redacoes.map( (res) => (
-                <TableRow>
-                  <TableCell>Redação Nº {res.numero}</TableCell>
-                  <TableCell>{dateFormat(res.created_at)}</TableCell>
-                </TableRow>
-              ))
+          <Table style={{ maxHeight: '700px' }}>
+            {redacoes.map((res) => (
+              <TableRow>
+                <TableCell>Redação Nº {res.numero}</TableCell>
+                <TableCell>{dateFormat(res.created_at)}</TableCell>
+              </TableRow>
+            ))
             }
           </Table>
-          
-
         </Container>
       </main>
     </div>
