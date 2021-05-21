@@ -14,10 +14,9 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import { useHistory } from 'react-router';
 import MenuIcon from '@material-ui/icons/Menu';
 import CloseIcon from '@material-ui/icons/Close';
-import { Card, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
+import { Card, ListItem, ListItemIcon, ListItemText, Table, TableCell, TableRow } from '@material-ui/core';
 import DescriptionIcon from '@material-ui/icons/Description';
 import api from '../../services/api'
-import CardRedacao from '../../components/cardRedacao';
 
 const drawerWidth = 240;
 
@@ -86,6 +85,8 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     height: '100vh',
     overflow: 'auto',
+    marginTop: theme.spacing(10),
+    marginBottom: theme.spacing(10)
   },
   container: {
     paddingTop: theme.spacing(4),
@@ -104,9 +105,8 @@ const useStyles = makeStyles((theme) => ({
 
 
 export default function Dashboard() {
-  const [redacao, setRedacao] = useState([])
-  const [carregando, setCarregando] = useState(false);
   const [redacoes, setRedacoes] = useState([]);
+  const [carregando, setCarregando] = useState(false);
   const classes = useStyles();
   let history = useHistory();
   const [open, setOpen] = useState(false);
@@ -118,13 +118,6 @@ export default function Dashboard() {
   };
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
-  const carregaRedacao = async (id) => {
-    await api.get(`/redacao/${id}`,
-      { headers: { Authorization: `Bearer ${localStorage.getItem("access_token")}` } })
-      .then((res) => {
-        setRedacao(res.data.data);
-      });
-  }
   const getIdRedacoes = async () => {
     await api.get(`/index/aluno/${localStorage.getItem("aluno_id")}`,
       { headers: { Authorization: `Bearer ${localStorage.getItem("access_token")}` } })
@@ -133,14 +126,25 @@ export default function Dashboard() {
       });
   };
 
-  useEffect(() => {
+  useEffect(async () => {
     getIdRedacoes();
   }, []);
+
 
   const handleLogout = () => {
     localStorage.clear();
     history.push('/')
   };
+
+  const dateFormat = (date) => {
+    const dateObj = new Date(date);
+    let formatted = "";
+
+    formatted = `${("0"+ dateObj.getDate()).slice(-2)}/${("0" + 
+      (dateObj.getMonth() + 1)).slice(-2)}/${dateObj.getFullYear()}`
+
+    return formatted;
+  }
 
   return (
     <div className={classes.root}>
@@ -158,7 +162,7 @@ export default function Dashboard() {
             <MenuIcon />
           </IconButton>
           <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-            Dashboard
+            Redações
           </Typography>
           <IconButton color="inherit">
             <ExitToAppIcon onClick={handleLogout} />
@@ -190,12 +194,16 @@ export default function Dashboard() {
       <div className={classes.appBarSpacer} />
       <main className={classes.content}>
         <Container>
-          {redacoes.map((red) => {
-
-            carregaRedacao(red.id)
-            console.log(redacao)
-            // return <CardRedacao redacao={redacao.id} />
-          })}
+          <Table>
+            {redacoes.map( (res) => (
+                <TableRow>
+                  <TableCell>Redação Nº {res.numero}</TableCell>
+                  <TableCell>{dateFormat(res.created_at)}</TableCell>
+                </TableRow>
+              ))
+            }
+          </Table>
+          
 
         </Container>
       </main>
